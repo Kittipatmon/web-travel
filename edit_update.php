@@ -45,29 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $checkStmt->close();
 
-    // ตรวจสอบลิ้งค์ซ้ำ
-    $linkCheckStmt = $conn->prepare("SELECT u_id FROM uploads WHERE (contact_link = ? OR vr_link = ?) AND u_id != ?");
-    $linkCheckStmt->bind_param("ssi", $contact_link, $vr_link, $u_id);
-    $linkCheckStmt->execute();
-    $linkCheckStmt->store_result();
-
-    if ($linkCheckStmt->num_rows > 0) {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
-        echo "<script>
-            Swal.fire({
-                title: 'เกิดข้อผิดพลาด!',
-                text: 'ลิ้งค์ซ้ำ กรุณาใช้ลิ้งค์อื่น',
-                icon: 'error',
-                timer: 1500,
-                timerProgressBar: true
-            }).then(() => {
-                window.history.back(); 
-            });
-        </script>";
-        exit; // หยุดการทำงาน
-    }
-    $linkCheckStmt->close();
-
     // ตรวจสอบว่ามีการอัปโหลดไฟล์ใหม่หรือไม่
     if (!empty($_FILES['image']['name'])) {
         $file = $_FILES['image'];

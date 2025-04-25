@@ -51,7 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$stmt) {
         die("ข้อผิดพลาดในการเตรียมคำสั่ง SQL: " . $conn->error);
     }
-    $stmt->bind_param("sisssss", $visitor_limit, $recommended_visitors, $area, $open_time, $close_time, $date_time, $u_id);
+    $stmt->bind_param(
+        "sissssssss", // ชนิดข้อมูล: s = string, i = integer
+        $visitor_limit,
+        $recommended_visitors,
+        $area,
+        $open_time,
+        $close_time,
+        $date_time,
+        $u_id,
+        $time_period,
+        $day_period,
+        $season
+    );
 
     if ($stmt->execute()) {
         echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
