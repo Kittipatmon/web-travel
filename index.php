@@ -71,6 +71,7 @@ if (isset($_GET['u_id'])) {
 
 
   <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+F2V6jE0I1PIgLN1uNUZJ+I9GxJIp" crossorigin="anonymous"></script>
     <div id="js-preloader" class="js-preloader">
       <div class="preloader-inner">
         <span class="dot"></span>
@@ -291,7 +292,6 @@ if (isset($_GET['u_id'])) {
 
     <script src="assets/js/isotope.min.js"></script>
     <script src="assets/js/owl-carousel.js"></script>
-    <script src="assets/js/wow.js"></script>
     <script src="assets/js/tabs.js"></script>
     <script src="assets/js/popup.js"></script>
     <script src="assets/js/custom.js"></script>
