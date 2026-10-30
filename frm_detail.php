@@ -16,9 +16,56 @@
 
         body {
             font-family: 'Prompt', sans-serif;
-            background-color: #f5f7fa;
+            background-color: #faf7f2;
+            /* โทนอบอุ่นละมุนแบบหน้าหลัก/หน้าติดต่อ (#faf7f2) พร้อมคลื่นลวดลายแนวเทือกเขาและสายหมอกบางเบา สไตล์มินิมอล */
+            background-image: 
+                radial-gradient(circle at 10% 15%, rgba(255, 153, 27, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(2, 132, 199, 0.04) 0%, transparent 45%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 400' preserveAspectRatio='none' width='100%25' height='400'%3E%3Cpath d='M0,180 C320,120 540,240 860,170 C1140,110 1320,200 1440,160 L1440,400 L0,400 Z' fill='none' stroke='rgba(217, 119, 6, 0.04)' stroke-width='1.5'/%3E%3Cpath d='M0,230 C280,180 620,270 960,210 C1200,170 1360,220 1440,200 L1440,400 L0,400 Z' fill='none' stroke='rgba(217, 119, 6, 0.035)' stroke-width='1.5'/%3E%3Cpath d='M0,280 C380,240 680,310 1040,260 C1240,230 1360,270 1440,250 L1440,400 L0,400 Z' fill='none' stroke='rgba(2, 132, 199, 0.03)' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-repeat: repeat-y;
+            background-size: 100% 400px;
+            background-attachment: fixed;
             color: #333;
             line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ตกแต่งการ์ดเนื้อหาให้อ่านง่าย สบายตา สไตล์โมเดิร์นคลีน */
+        .details-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .details-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px -4px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 16px 24px;
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .booking-card .card-header {
+            background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+        }
+
+        .gallery {
+            background-color: #ffffff;
+            border-radius: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 28px;
+            box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.04);
+            margin-top: 35px;
         }
 
         .container {

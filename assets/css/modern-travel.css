@@ -1,0 +1,1320 @@
+/* ========================================================
+   MODERN THAI TRAVEL PORTAL (INSPIRED BY FUN TRIP)
+   Clean, Human-Crafted, Responsive
+   Brand: Virtual Vista PCRU (Orange #ff991b & Green #27ae60)
+   (Nav & Poster/Banner are kept in their original styles)
+   ======================================================== */
+
+:root {
+  --primary: #ff991b;
+  --primary-hover: #e58512;
+  --primary-soft: #fff7ed;
+  --secondary: #16a34a;
+  --dark: #0f172a;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --border-color: #e2e8f0;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --font-prompt: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* --------------------------------------------------------
+   SEARCH & CATEGORY ICONS (EXACT STYLE AS IN USER SCREENSHOT)
+   -------------------------------------------------------- */
+.search-filter-section {
+  padding: 50px 0 45px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.search-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 28px;
+  letter-spacing: -0.3px;
+}
+
+.search-pill-container {
+  max-width: 880px;
+  margin: 0 auto 34px;
+  background: #ffffff;
+  border-radius: 50px;
+  padding: 6px 8px 6px 28px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.07);
+  border: 1px solid #eef2f6;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.search-pill-container:focus-within {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.12);
+}
+
+.search-pill-container input[type="text"] {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  font-family: var(--font-prompt);
+  color: #334155;
+  background: transparent;
+  padding: 8px 0;
+}
+
+.search-pill-container input[type="text"]::placeholder {
+  color: #94a3b8;
+}
+
+.search-dropdown-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 20px 0 15px;
+  border-left: 1px solid #e2e8f0;
+}
+
+.search-dropdown-box select {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #475569;
+  font-size: 14.5px;
+  font-family: var(--font-prompt);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 20px;
+  font-weight: 500;
+}
+
+.search-dropdown-box .chevron-icon {
+  position: absolute;
+  right: 0;
+  font-size: 11px;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.search-pill-btn {
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  outline: none;
+  padding: 10px 28px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-prompt);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease, transform 0.15s ease;
+  margin-left: 8px;
+}
+
+.search-pill-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Dotted Horizontal Divider (Wider & more breathing room) */
+.search-dotted-divider {
+  max-width: 1050px;
+  margin: 36px auto 38px;
+  border-top: 1.5px dashed #cbd5e1;
+}
+
+/* Category Squircle Icon Row (Expanded, spacious, well-spaced) */
+.category-squircle-row {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 32px 50px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 5px 15px;
+}
+
+@media (max-width: 900px) {
+  .category-squircle-row {
+    gap: 24px 30px;
+  }
+}
+
+.cat-squircle-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important;
+  color: #1e293b;
+  transition: transform 0.2s ease;
+  min-width: 80px;
+}
+
+.cat-squircle-item:hover {
+  transform: translateY(-5px);
+  color: var(--primary);
+}
+
+.cat-squircle-box {
+  width: 66px;
+  height: 66px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #ffffff;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.09);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.cat-squircle-item:hover .cat-squircle-box {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+}
+
+.cat-squircle-item span.cat-label-text {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #334155;
+  letter-spacing: -0.2px;
+}
+
+.cat-squircle-item.active span.cat-label-text {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.cat-squircle-item.active .cat-squircle-box {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+  box-shadow: 0 8px 20px rgba(255, 153, 27, 0.35);
+}
+
+/* Exact Squircle Box Background Colors from Screenshot */
+.sq-blue   { background-color: #0047cc; }  /* 1. ที่เที่ยว (Dark Blue with Globe/Plane) */
+.sq-red    { background-color: #e11d48; }  /* 2. เทศกาล (Red with Party Popper) */
+.sq-purple { background-color: #6366f1; }  /* 3. เปิดใหม่ (Purple/Violet with Bell) */
+.sq-green  { background-color: #15803d; }  /* 4. กางเต็นท์ (Forest Green with Tent) */
+.sq-yellow { background-color: #f59e0b; }  /* 5. ที่พัก (Amber Yellow with Bed/Pin) */
+.sq-orange { background-color: #ea580c; }  /* 6. ทริปเที่ยว (Vibrant Orange with Ticket) */
+
+/* --------------------------------------------------------
+   4. ATTRACTIONS SECTION (EXACT STYLE & BALANCED SIZING AS IN SCREENSHOT)
+   -------------------------------------------------------- */
+.attractions-portal-section {
+  padding: 55px 0 70px;
+  background-color: #fffaf0; /* โทนสีอ่อนนุ่มนวล สบายตา */
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M-20 20 Q 20 55, 60 20 T 140 20' fill='none' stroke='rgba(245,158,11,0.18)' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M-20 60 Q 20 95, 60 60 T 140 60' fill='none' stroke='rgba(255,153,27,0.13)' stroke-width='1.5' stroke-linecap='round'/%3E%3Ccircle cx='20' cy='20' r='2.5' fill='rgba(245,158,11,0.22)'/%3E%3Ccircle cx='60' cy='60' r='2.5' fill='rgba(245,158,11,0.22)'/%3E%3C/svg%3E"),
+    linear-gradient(135deg, #fffdfa 0%, #fffbeb 35%, #fef3c7 70%, #ffedd5 100%);
+  background-size: 80px 80px, 100% 100%;
+  animation: runningWavePattern 22s linear infinite;
+  border-top: 1px solid rgba(245, 158, 11, 0.2);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+  position: relative;
+  scroll-margin-top: 80px;
+}
+
+@keyframes runningWavePattern {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 80px 80px, 0 0;
+  }
+}
+
+.portal-white-container {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 34px 38px 38px;
+  box-shadow: 0 12px 35px rgba(217, 119, 6, 0.08), 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(245, 158, 11, 0.16);
+}
+
+.portal-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.portal-title-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.portal-title-left .icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.portal-title-left p.sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin: 0 0 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.portal-title-left h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* Horizontal category links on top-right (Exact as in screenshot) */
+.portal-menu-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.portal-menu-links a {
+  color: #64748b;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: color 0.2s;
+}
+
+.portal-menu-links a:hover,
+.portal-menu-links a.active {
+  color: var(--primary);
+  font-weight: 700;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 2px;
+}
+
+/* 3-Column Card Grid (Balanced, proportioned, not too big, not too small) */
+.travel-3col-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+@media (max-width: 992px) {
+  .travel-3col-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .travel-3col-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.travel-item-card {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.travel-item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.09);
+}
+
+.item-thumb-box {
+  position: relative;
+  width: 100%;
+  height: 185px; /* Sized just right */
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.item-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.travel-item-card:hover .item-thumb-box img {
+  transform: scale(1.05);
+}
+
+.thumb-title-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.75) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14px 16px;
+  pointer-events: none;
+}
+
+.thumb-title-overlay h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-badge-vr {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 102, 255, 0.9);
+  color: #ffffff;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.item-body {
+  padding: 12px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.item-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 4px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-desc {
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.45;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-footer {
+  border-top: 1px solid #f8fafc;
+  padding-top: 10px;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-views {
+  font-size: 12px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-card-view {
+  background: var(--primary);
+  color: #ffffff !important;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 16px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none !important;
+  transition: background 0.2s;
+}
+
+.btn-card-view:hover {
+  background: var(--primary-hover);
+}
+
+/* Bottom Centered "ดูทั้งหมด" Pill Button */
+.portal-bottom-btn-box {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.btn-portal-view-all {
+  display: inline-block;
+  border: 1.5px solid var(--primary);
+  color: var(--primary) !important;
+  background: #ffffff;
+  padding: 7px 36px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+}
+
+.btn-portal-view-all:hover {
+  background: var(--primary);
+  color: #ffffff !important;
+}
+
+/* Pagination */
+.portal-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 35px;
+}
+
+.portal-pagination a,
+.portal-pagination span {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  text-decoration: none;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s;
+}
+
+.portal-pagination a:hover,
+.portal-pagination span.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------
+   5. MID BANNER: REAL ROUTE MAP CALLOUT (Like Fun Trip Image 3)
+   -------------------------------------------------------- */
+.mid-route-banner-section {
+  padding: 20px 0 50px;
+}
+
+.mid-banner-card {
+  background: #1e293b;
+  border-radius: 20px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  color: #ffffff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 992px) {
+  .mid-banner-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.banner-map-preview {
+  height: 280px;
+  background: #0f172a;
+  overflow: hidden;
+}
+
+.banner-map-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.mid-banner-card:hover .banner-map-preview img {
+  transform: scale(1.03);
+}
+
+.banner-info-box {
+  padding: 35px 40px;
+}
+
+.banner-info-box h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px;
+}
+
+.banner-info-box p {
+  color: #94a3b8;
+  font-size: 14.5px;
+  margin: 0 0 20px;
+  line-height: 1.6;
+}
+
+.btn-banner-route {
+  background: var(--primary);
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none !important;
+  transition: background 0.2s;
+}
+
+.btn-banner-route:hover {
+  background: var(--primary-hover);
+}
+
+/* --------------------------------------------------------
+   5. PROMOTIONAL TRAVEL POSTER SLIDER (EXACT AS USER ATTACHMENTS)
+   -------------------------------------------------------- */
+.promo-poster-slider-wrapper {
+  margin: 35px 0 25px;
+}
+
+.promo-poster-carousel {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #f8fafc;
+}
+
+.promo-poster-slide {
+  position: relative;
+  width: 100%;
+}
+
+.promo-poster-slide img.poster-graphic-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.poster-hotspots-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.poster-hotspots-overlay a {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.hotspot-link-full {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.promo-poster-dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  padding: 5px 12px;
+  border-radius: 50px;
+}
+
+.promo-poster-dots .poster-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.promo-poster-dots .poster-dot:hover {
+  background: #ffffff;
+}
+
+.promo-poster-dots .poster-dot.active {
+  background: #ff991b;
+  width: 24px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(255, 153, 27, 0.6);
+}
+
+/* Featured Spotlight Slider Container (อันล่างเลื่อนได้) */
+.spotlight-slider-section {
+  padding: 10px 0 50px;
+  position: relative;
+}
+
+.spotlight-carousel-card {
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.06);
+  position: relative;
+}
+
+.spotlight-slide-item {
+  display: none;
+  grid-template-columns: 1.15fr 1fr;
+  animation: fadeSpotlight 0.35s ease;
+}
+
+.spotlight-slide-item.active {
+  display: grid;
+}
+
+@keyframes fadeSpotlight {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .spotlight-slide-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left Image Box with Slide Arrows */
+.spotlight-media-col {
+  position: relative;
+  min-height: 380px;
+  background: #0f172a;
+  overflow: hidden;
+}
+
+.spotlight-media-col img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.spotlight-media-col .media-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0.85) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 30px;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+.spotlight-media-col .media-overlay h3 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.spotlight-media-col .media-overlay p {
+  color: #e2e8f0;
+  font-size: 14px;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Left/Right Slide Arrows on Image (Like in screenshot) */
+.spot-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.spot-nav-arrow:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.spot-nav-prev { left: 16px; }
+.spot-nav-next { right: 16px; }
+
+/* Right Text Details Column */
+.spotlight-info-col {
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.spotlight-info-col h3.info-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 14px;
+  line-height: 1.45;
+}
+
+/* Dashed divider line matching the user screenshot */
+.spotlight-dashed-line {
+  border-bottom: 2px dashed var(--primary);
+  margin-bottom: 18px;
+  width: 100%;
+}
+
+.spotlight-info-col p.info-content {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.7;
+  margin: 0 0 24px;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.spotlight-actions-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-spotlight-blue {
+  background: var(--primary);
+  color: #ffffff !important;
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-decoration: none !important;
+  transition: background 0.2s ease;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-spotlight-blue:hover {
+  background: var(--primary-hover);
+}
+
+.btn-spotlight-vr {
+  background: #2a2a2a;
+  color: #ffffff !important;
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none !important;
+  transition: background 0.2s ease;
+}
+
+.btn-spotlight-vr:hover {
+  background: #111111;
+}
+
+/* Slide Indicator Dots */
+.spotlight-dots-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.spotlight-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.spotlight-dot.active {
+  background: var(--primary);
+  width: 24px;
+  border-radius: 50px;
+}
+
+/* --------------------------------------------------------
+   7. PHOTO THUMBNAIL CARDS (Like Fun Trip Image 4 Bottom)
+   -------------------------------------------------------- */
+.spotlight-grid-4cards {
+  padding: 0 0 60px;
+}
+
+.section-clean-heading {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.section-clean-heading h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 6px;
+}
+
+.section-clean-heading p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.photo-cards-4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+@media (max-width: 992px) {
+  .photo-cards-4col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .photo-cards-4col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.photo-mini-card {
+  position: relative;
+  height: 180px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.photo-mini-card:hover {
+  transform: translateY(-4px);
+}
+
+.photo-mini-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.photo-mini-card:hover img {
+  transform: scale(1.06);
+}
+
+.photo-mini-card .overlay-caption {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.75) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 16px;
+  color: #ffffff;
+}
+
+.photo-mini-card .overlay-caption h5 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 2px;
+  color: #ffffff;
+}
+
+.photo-mini-card .overlay-caption span {
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+/* --------------------------------------------------------
+   8. REAL FOOTER - ORANGE THEME (EXACT LAYOUT AS REFERENCE SCREENSHOT)
+   -------------------------------------------------------- */
+.portal-footer.orange-theme-footer {
+  position: relative;
+  background: linear-gradient(135deg, #f97316 0%, #ff8c00 24%, #ff991b 52%, #ffa726 80%, #ffb74d 100%);
+  color: #ffffff;
+  padding: 42px 0 0;
+  border-top: 3px solid #ff991b;
+  font-size: 13.5px;
+  overflow: hidden;
+  box-shadow: 0 -10px 35px rgba(249, 115, 22, 0.2);
+}
+
+/* Background Artwork: Waves, Elephant & Airplane */
+.footer-bg-artwork {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.footer-bg-artwork svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.footer-relative-content {
+  position: relative;
+  z-index: 3;
+}
+
+/* Top Bar: Brand on Left, FOLLOW US on Right */
+.footer-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 22px;
+}
+
+.footer-brand-header .brand-main {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.6px;
+  display: block;
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.footer-brand-header .brand-domain {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.footer-follow-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.follow-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.8px;
+}
+
+.social-pill-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* 4 Colored Social Buttons (Exact as Reference Image) */
+.social-square-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff !important;
+  font-size: 14px;
+  text-decoration: none !important;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.social-square-btn:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.15);
+}
+
+.social-square-btn.fb   { background-color: #1877f2; } /* Facebook Blue */
+.social-square-btn.tw   { background-color: #0284c7; } /* Twitter / X Sky Blue */
+.social-square-btn.yt   { background-color: #dc2626; } /* YouTube Red */
+.social-square-btn.mail { background-color: #ea580c; } /* Email Coral Orange */
+
+.footer-horizontal-line {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.16);
+  margin-bottom: 30px;
+}
+
+/* 4 Columns Grid */
+.footer-columns-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1.1fr 1.3fr;
+  gap: 32px;
+  margin-bottom: 35px;
+}
+
+@media (max-width: 992px) {
+  .footer-columns-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-columns-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* Pipe Heading (| FUNTRIP style) */
+.pipe-heading {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.pipe-heading::before {
+  content: "";
+  display: inline-block;
+  width: 3.5px;
+  height: 18px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.footer-desc-text {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #ffffff;
+  margin: 0 0 16px;
+  max-width: 320px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Vis. Today Counter Badge (Exact as in Screenshot) */
+.footer-vis-counter-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.vis-chart-icon {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 5px 8px;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.vis-label {
+  padding: 5px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.vis-number {
+  background: #ffffff;
+  color: #ea580c;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  min-width: 28px;
+  text-align: center;
+}
+
+/* Regular links (Col 2 & 3) */
+.footer-styled-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-styled-links li {
+  margin-bottom: 9px;
+}
+
+.footer-styled-links a {
+  color: #ffffff;
+  text-decoration: none !important;
+  font-size: 13.5px;
+  transition: all 0.2s ease;
+  display: inline-block;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.footer-styled-links a:hover {
+  color: #fff7ed;
+  font-weight: 600;
+  transform: translateX(4px);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+/* Network Icon links (Col 4 - with icons as in reference) */
+.footer-network-icon-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-network-icon-links li {
+  margin-bottom: 9px;
+}
+
+.footer-network-icon-links a {
+  color: #ffffff;
+  text-decoration: none !important;
+  font-size: 13.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.footer-network-icon-links a i {
+  width: 16px;
+  color: #ffffff;
+  font-size: 13px;
+  text-align: center;
+  opacity: 0.95;
+  transition: transform 0.2s ease;
+}
+
+.footer-network-icon-links a:hover {
+  color: #fff7ed;
+  font-weight: 600;
+  transform: translateX(4px);
+}
+
+.footer-network-icon-links a:hover i {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* Bottom Bar */
+.footer-bottom-flex {
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(194, 65, 12, 0.35);
+  margin: 0 -100vw;
+  padding: 16px 100vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.bottom-copyright-text {
+  font-size: 12.5px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.bottom-copyright-text a {
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.btn-footer-scroll-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 38px;
+  height: 38px;
+  background: #1e293b;
+  color: #ffffff !important;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  text-decoration: none !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 99;
+  transition: all 0.25s ease;
+  opacity: 0.9;
+}
+
+.btn-footer-scroll-top:hover {
+  background: #ff991b;
+  transform: translateY(-3px);
+  opacity: 1;
+}
+

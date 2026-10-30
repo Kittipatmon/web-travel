@@ -2,12 +2,16 @@
 	
 	"use strict";
 
-	// Page loading animation
-	$(window).on('load', function() {
-
+	// Page loading animation - แสดงผลทันที ไม่ค้างรอ iframe/maps
+	$(document).ready(function() {
         $('#js-preloader').addClass('loaded');
-
     });
+	$(window).on('load', function() {
+        $('#js-preloader').addClass('loaded');
+    });
+    setTimeout(function() {
+        $('#js-preloader').addClass('loaded');
+    }, 350);
 
 	// WOW JS
 	$(window).on ('load', function (){

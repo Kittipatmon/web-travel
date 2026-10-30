@@ -1,19 +1,21 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include "connect.php";
-session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $t_id = $_POST['t_id'];
-    $visitor_limit = $_POST['visitor_limit'];
-    $recommended_visitors = isset($_POST['recommended_visitors']) && $_POST['recommended_visitors'] !== '' ? $_POST['recommended_visitors'] : null;
-    $area = $_POST['area'];
-    $open_time = $_POST['open_time'];
-    $close_time = $_POST['close_time'];
-    $date_time = $_POST['date_time'];
-    $time_period = $_POST['time_period'];
-    $day_period = $_POST['day_period'];
-    $season = $_POST['season'];
-    $u_id = $_POST['u_id'];
+    $t_id = intval($_POST['t_id'] ?? 0);
+    $visitor_limit = trim($_POST['visitor_limit'] ?? '');
+    $recommended_visitors = isset($_POST['recommended_visitors']) && $_POST['recommended_visitors'] !== '' ? intval($_POST['recommended_visitors']) : null;
+    $area = trim($_POST['area'] ?? '');
+    $open_time = trim($_POST['open_time'] ?? '');
+    $close_time = trim($_POST['close_time'] ?? '');
+    $date_time = trim($_POST['date_time'] ?? '');
+    $time_period = trim($_POST['time_period'] ?? '');
+    $day_period = trim($_POST['day_period'] ?? '');
+    $season = trim($_POST['season'] ?? '');
+    $u_id = intval($_POST['u_id'] ?? 0);
 
     // ตรวจสอบว่า id มีอยู่ในฐานข้อมูลหรือไม่
     $checkStmt = $conn->prepare("SELECT t_id FROM tourist_spot WHERE t_id = ?");
@@ -22,18 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $checkStmt->store_result();
 
     if ($checkStmt->num_rows === 0) {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
-        echo "<script>
-            Swal.fire({
-                title: 'เกิดข้อผิดพลาด!',
-                text: 'ไม่พบข้อมูลสถานที่ท่องเที่ยว',
-                icon: 'error',
-                timer: 1500,
-                timerProgressBar: true
-            }).then(() => {
-                window.history.back(); 
-            });
-        </script>";
+        $_SESSION['flash_alert'] = [
+            'icon' => 'error',
+            'title' => 'เกิดข้อผิดพลาด!',
+            'text' => 'ไม่พบข้อมูลสถานที่ท่องเที่ยว'
+        ];
+        $checkStmt->close();
+        header("Location: dashboard_detail.php");
         exit;
     }
     $checkStmt->close();
@@ -45,19 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $linkCheckStmt->store_result();
 
     if ($linkCheckStmt->num_rows > 0) {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
-        echo "<script>
-        Swal.fire({
-            title: 'เกิดข้อผิดพลาด!',
-            text: 'สถานที่ซ้ำ กรุณาเลือกสถานที่อื่น',
-            icon: 'error',
-            timer: 1500,
-            timerProgressBar: true
-        }).then(() => {
-            window.history.back(); 
-        });
-    </script>";
-        exit; // หยุดการทำงาน
+        $_SESSION['flash_alert'] = [
+            'icon' => 'error',
+            'title' => 'ข้อผิดพลาด!',
+            'text' => 'สถานที่นี้มีข้อมูลรายละเอียดอยู่แล้ว กรุณาเลือกสถานที่อื่น'
+        ];
+        $linkCheckStmt->close();
+        header("Location: dashboard_detail.php");
+        exit;
     }
     $linkCheckStmt->close();
 
@@ -66,32 +58,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("siissssssii", $visitor_limit, $recommended_visitors, $area, $open_time, $close_time, $date_time, $time_period, $day_period, $season, $u_id, $t_id);
 
     if ($stmt->execute()) {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
-        echo "<script>
-            Swal.fire({
-                title: 'แก้ไขสำเร็จ!',
-                text: 'ข้อมูลถูกอัปเดตเรียบร้อยแล้ว',
-                icon: 'success',
-                timer: 1500,
-                timerProgressBar: true
-            }).then(() => {
-                window.location='dashboard_detail.php'; 
-            });
-        </script>";
-        exit;
+        $_SESSION['flash_alert'] = [
+            'icon' => 'success',
+            'title' => 'แก้ไขสำเร็จ!',
+            'text' => 'ข้อมูลรายละเอียดสถานที่ถูกอัปเดตเรียบร้อยแล้ว'
+        ];
     } else {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
-        echo "<script>
-            Swal.fire({
-                title: 'เกิดข้อผิดพลาด!',
-                text: 'ไม่สามารถอัปเดตข้อมูลได้',
-                icon: 'error',
-                timer: 1500,
-                timerProgressBar: true
-            }).then(() => {
-                window.location='dashboard_detail.php'; 
-            });
-        </script>";
-        exit;
+        $_SESSION['flash_alert'] = [
+            'icon' => 'error',
+            'title' => 'เกิดข้อผิดพลาด!',
+            'text' => 'ไม่สามารถอัปเดตข้อมูลได้: ' . $stmt->error
+        ];
     }
+    $stmt->close();
 }
+
+header("Location: dashboard_detail.php");
+exit;

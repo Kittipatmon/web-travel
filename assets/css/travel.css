@@ -420,13 +420,8 @@ Header Style
 }
 
 .header-area .main-nav .nav li a.active::after {
-  width: 20px;
-  height: 2px;
-  background-color: #fff;
-  position: absolute;
-  content: '';
-  left: 15px;
-  top: 2px;
+  display: none !important;
+  content: none !important;
 }
 
 .background-header .main-nav .nav li:hover a,

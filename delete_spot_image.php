@@ -1,8 +1,11 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include "connect.php";
 
 if (isset($_GET['m_id'])) {
-    $m_id = $_GET['m_id'];
+    $m_id = intval($_GET['m_id']);
 
     // ดึงชื่อไฟล์จากฐานข้อมูล
     $stmt = $conn->prepare("SELECT filename FROM images WHERE m_id = ?");
@@ -16,15 +19,28 @@ if (isset($_GET['m_id'])) {
     if (!empty($filename)) {
         $filePath = "uploads/" . $filename;
         if (file_exists($filePath)) {
-            unlink($filePath);
+            @unlink($filePath);
         }
     }
 
     // ลบข้อมูลจากฐานข้อมูล
     $stmt = $conn->prepare("DELETE FROM images WHERE m_id = ?");
     $stmt->bind_param("i", $m_id);
-    $stmt->execute();
-
-    header("Location: dashboard_spot_image.php");
-    exit;
+    if ($stmt->execute()) {
+        $_SESSION['flash_alert'] = [
+            'icon' => 'success',
+            'title' => 'ลบข้อมูลสำเร็จ!',
+            'text' => 'รูปภาพถูกลบเรียบร้อยแล้ว'
+        ];
+    } else {
+        $_SESSION['flash_alert'] = [
+            'icon' => 'error',
+            'title' => 'เกิดข้อผิดพลาด!',
+            'text' => 'ไม่สามารถลบรูปภาพได้: ' . $stmt->error
+        ];
+    }
+    $stmt->close();
 }
+
+header("Location: dashboard_spot_image.php");
+exit;

@@ -1,26 +1,20 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include "connect.php";
-session_start(); // ต้องเริ่ม session ก่อน
 
-// ตรวจสอบว่าเป็นการร้องขอแบบ POST หรือไม่
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $u_id = $_POST['u_id'];
-    $imageName = $_POST['image_name'];
-    $content = $_POST['content'];
-    $contact = $_POST['contact'];
-    $title = $_POST['title'];
-    $subtitle = $_POST['subtitle'];
-    $contact_link = $_POST['contact_link'];
-    $vr_link = $_POST['vr_link'];
-    $oldImagePath = $_POST['old_image_path']; // เก็บไฟล์รูปเก่า
-
-    // ดึงข้อมูลเดิมจากฐานข้อมูล
-    $query = $conn->prepare("SELECT contact_link, vr_link FROM uploads WHERE u_id = ?");
-    $query->bind_param("i", $u_id);
-    $query->execute();
-    $query->bind_result($oldContactLink, $oldVrLink);
-    $query->fetch();
-    $query->close();
+    $u_id = intval($_POST['u_id'] ?? 0);
+    $imageName = trim($_POST['image_name'] ?? '');
+    $content = trim($_POST['content'] ?? '');
+    $contact = trim($_POST['contact'] ?? '');
+    $title = trim($_POST['title'] ?? '');
+    $subtitle = trim($_POST['subtitle'] ?? '');
+    $c_id = !empty($_POST['c_id']) ? intval($_POST['c_id']) : null;
+    $contact_link = trim($_POST['contact_link'] ?? '');
+    $vr_link = trim($_POST['vr_link'] ?? '');
+    $oldImagePath = trim($_POST['old_image_path'] ?? '');
 
     // ตรวจสอบชื่อสถานที่ซ้ำ
     $checkStmt = $conn->prepare("SELECT u_id FROM uploads WHERE image_name = ? AND u_id != ?");
@@ -29,19 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $checkStmt->store_result();
 
     if ($checkStmt->num_rows > 0) {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
-        echo "<script>
-            Swal.fire({
-                title: 'เกิดข้อผิดพลาด!',
-                text: 'ชื่อสถานที่ซ้ำ กรุณาใช้ชื่ออื่น',
-                icon: 'error',
-                timer: 1500,
-                timerProgressBar: true
-            }).then(() => {
-                window.history.back(); 
-            });
-        </script>";
-        exit; // หยุดการทำงาน
+        $_SESSION['flash_alert'] = [
+            'icon' => 'error',
+            'title' => 'ข้อผิดพลาด!',
+            'text' => 'ชื่อสถานที่ซ้ำ กรุณาใช้ชื่ออื่น'
+        ];
+        header("Location: dashboard_pic.php");
+        exit;
     }
     $checkStmt->close();
 
@@ -59,50 +47,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (move_uploaded_file($file['tmp_name'], $newImagePath)) {
             // ลบไฟล์เก่า ถ้ามีและไม่ใช่ค่าเริ่มต้น
             if (!empty($oldImagePath) && file_exists($oldImagePath)) {
-                unlink($oldImagePath);
+                @unlink($oldImagePath);
             }
         } else {
-            $newImagePath = $oldImagePath; // ใช้รูปเดิมหากอัปโหลดไม่สำเร็จ
+            $newImagePath = $oldImagePath;
         }
     } else {
-        $newImagePath = $oldImagePath; // ไม่มีการอัปโหลด ใช้รูปเดิม
+        $newImagePath = $oldImagePath;
     }
-
-    // ตรวจสอบว่าลิงก์มีการเปลี่ยนแปลงหรือไม่
-    $contactLinkChanged = ($contact_link !== $oldContactLink);
-    $vrLinkChanged = ($vr_link !== $oldVrLink);
 
     // อัปเดตฐานข้อมูล
-    $stmt = $conn->prepare("UPDATE uploads SET image_name = ?, image_path = ?, content = ?, contact = ?, title = ?, subtitle = ?, contact_link = ?, vr_link = ? WHERE u_id = ?");
-    $stmt->bind_param("ssssssssi", $imageName, $newImagePath, $content, $contact, $title, $subtitle, $contact_link, $vr_link, $u_id);
+    $stmt = $conn->prepare("UPDATE uploads SET image_name = ?, image_path = ?, content = ?, contact = ?, title = ?, subtitle = ?, c_id = ?, contact_link = ?, vr_link = ? WHERE u_id = ?");
+    $stmt->bind_param("ssssssissi", $imageName, $newImagePath, $content, $contact, $title, $subtitle, $c_id, $contact_link, $vr_link, $u_id);
 
     if ($stmt->execute()) {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
-        echo "<script>
-            Swal.fire({
-                title: 'แก้ไขสำเร็จ!',
-                text: 'ข้อมูลถูกอัปเดตเรียบร้อยแล้ว',
-                icon: 'success',
-                timer: 1500,
-                timerProgressBar: true
-            }).then(() => {
-                window.location='dashboard_pic.php'; 
-            });
-        </script>";
-        exit; // Stop execution to prevent further processing
+        $_SESSION['flash_alert'] = [
+            'icon' => 'success',
+            'title' => 'แก้ไขสำเร็จ!',
+            'text' => 'ข้อมูลสถานที่ท่องเที่ยวถูกอัปเดตเรียบร้อยแล้ว'
+        ];
     } else {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
-        echo "<script>
-            Swal.fire({
-                title: 'เกิดข้อผิดพลาด!',
-                text: 'ไม่สามารถอัปเดตข้อมูลได้',
-                icon: 'error',
-                timer: 1500,
-                timerProgressBar: true
-            }).then(() => {
-                window.location='dashboard_pic.php'; 
-            });
-        </script>";
-        exit; // Stop execution to prevent further processing
+        $_SESSION['flash_alert'] = [
+            'icon' => 'error',
+            'title' => 'เกิดข้อผิดพลาด!',
+            'text' => 'ไม่สามารถอัปเดตข้อมูลได้: ' . $stmt->error
+        ];
     }
+    $stmt->close();
 }
+
+header("Location: dashboard_pic.php");
+exit;

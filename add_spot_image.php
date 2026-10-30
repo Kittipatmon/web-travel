@@ -1,19 +1,19 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include "connect.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $u_id = $_POST['u_id'] ?? null;
+    $u_id = intval($_POST['u_id'] ?? 0);
 
     if (!$u_id) {
-        echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
-        echo '<script>
-            Swal.fire({
-                icon: "error",
-                title: "เกิดข้อผิดพลาด!",
-                text: "ไม่พบข้อมูลผู้ใช้งาน"
-            });
-        </script>';
+        $_SESSION['flash_alert'] = [
+            'icon' => 'error',
+            'title' => 'เกิดข้อผิดพลาด!',
+            'text' => 'กรุณาเลือกสถานที่ท่องเที่ยว'
+        ];
+        header("Location: dashboard_spot_image.php");
         exit;
     }
 
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mkdir($targetDir, 0777, true);
     }
 
-    $success = [];
+    $success = 0;
     $errors = [];
 
     if (isset($_FILES['images']['tmp_name']) && is_array($_FILES['images']['tmp_name'])) {
@@ -38,56 +38,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($stmt) {
                         $stmt->bind_param("si", $newFileName, $u_id);
                         if ($stmt->execute()) {
-                            $success[] = $originalName;
+                            $success++;
                         } else {
-                            $errors[] = "บันทึกข้อมูลไม่สำเร็จ: " . $originalName;
+                            $errors[] = $originalName;
                         }
                         $stmt->close();
-                    } else {
-                        $errors[] = "SQL Error: " . $conn->error;
                     }
                 } else {
-                    $errors[] = "ไม่สามารถอัปโหลดไฟล์: " . $originalName;
+                    $errors[] = $originalName;
                 }
             }
         }
 
-        echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
-        if (!empty($success)) {
-            echo '<script>
-            Swal.fire({
-                icon: "success",
-                title: "อัปโหลดสำเร็จ",
-                text: "' . implode(", ", $success) . '"
-            }).then(() => {
-                window.location.href = "dashboard_spot_image.php";
-            });
-            </script>';
-        }
-        if (!empty($errors)) {
-            echo '<script>
-            Swal.fire({
-                icon: "error",
-                title: "พบข้อผิดพลาด",
-                html: "' . implode("<br>", $errors) . '"
-            });
-            </script>';
+        if ($success > 0) {
+            $_SESSION['flash_alert'] = [
+                'icon' => 'success',
+                'title' => 'อัปโหลดสำเร็จ!',
+                'text' => 'อัปโหลดรูปภาพจำนวน ' . $success . ' รูปเรียบร้อยแล้ว'
+            ];
+        } else {
+            $_SESSION['flash_alert'] = [
+                'icon' => 'error',
+                'title' => 'เกิดข้อผิดพลาด!',
+                'text' => 'ไม่สามารถอัปโหลดรูปภาพได้ กรุณาตรวจสอบไฟล์'
+            ];
         }
     } else {
-        echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
-        echo '<script>
-            Swal.fire({
-            icon: "warning",
-            title: "ไม่มีไฟล์ที่อัปโหลด!"
-            });
-        </script>';
+        $_SESSION['flash_alert'] = [
+            'icon' => 'warning',
+            'title' => 'แจ้งเตือน',
+            'text' => 'ไม่มีไฟล์ที่ถูกเลือกอัปโหลด'
+        ];
     }
-} else {
-    echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
-    echo '<script>
-        Swal.fire({
-            icon: "error",
-            title: "คำขอไม่ถูกต้อง!"
-        });
-        </script>';
 }
+
+header("Location: dashboard_spot_image.php");
+exit;

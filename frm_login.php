@@ -10,7 +10,7 @@ session_unset(); // Clear session variables after using them
 
 function showError($error)
 {
-    return !empty($error) ? "<div class='error-message' style='color: red; font-size: 12px;'>$error</div>" : '';
+    return !empty($error) ? "<div class='error-message' style='color: #dc2626; font-size: 13px; margin-bottom: 15px; padding: 10px 14px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca; text-align: center;'>⚠️ " . htmlspecialchars($error) . "</div>" : '';
 }
 function isActiveForm($formName, $activeForm)
 {
@@ -611,7 +611,7 @@ function isActiveForm($formName, $activeForm)
                     <div class="input-group">
                         <input type="password" id="login-password" name="password_user" placeholder=" ">
                         <label for="login-password">รหัสผ่าน</label>
-                        <div class="icon">
+                        <div class="icon" id="togglePassword" style="cursor: pointer;" title="กดเพื่อดู/ซ่อนรหัสผ่าน">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7F8C8D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -619,7 +619,7 @@ function isActiveForm($formName, $activeForm)
                         </div>
                     </div>
                     <div class="forgot-password">
-                        <a href="#">ลืมรหัสผ่าน?</a>
+                        <a href="javascript:void(0)" onclick="alert('ข้อมูลเข้าสู่ระบบเริ่มต้น:\nอีเมล: test@gmail.com\nรหัสผ่าน: test หรือ 1234')">ลืมรหัสผ่าน?</a>
                     </div>
                     <button type="submit">เข้าสู่ระบบ</button>
                 </form>
@@ -628,23 +628,29 @@ function isActiveForm($formName, $activeForm)
         </div>
     </div>
     <script>
-        // Ensure both forms are visible but only one is displayed based on the active tab
         document.addEventListener('DOMContentLoaded', function() {
-            // Make sure the forms are properly initialized
-            if (loginTab.classList.contains('active')) {
-                loginSection.classList.remove('hidden');
-                registerSection.classList.add('hidden');
-            } else {
-                registerSection.classList.remove('hidden');
-                loginSection.classList.add('hidden');
+            // Password Visibility Toggle
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('login-password');
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    const isPassword = passwordInput.getAttribute('type') === 'password';
+                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                    this.style.opacity = isPassword ? '1' : '0.6';
+                });
             }
-        });
 
-        // If you need JavaScript for the back button functionality
-        document.addEventListener('DOMContentLoaded', function() {
+            // Back button
             const backButton = document.querySelector('.back-button');
-            backButton.addEventListener('click', function() {
-                window.history.href = 'javascript:history.back()';
-            });
+            if (backButton) {
+                backButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.href = 'index.php';
+                    }
+                });
+            }
         });
     </script>
