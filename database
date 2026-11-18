@@ -140,7 +140,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id_user`, `name_user`, `email_user`, `password_user`, `role_user`) VALUES
-(1, 'ประกายแก้ว กู่สันเทียะ', 'test@gmail.com', 'test', 'admin');
+(1, 'ประกายแก้ว กู่สันเทียะ', 'test@gmail.com', '$2y$10$05kZuJdx0Cv9ug06fe1v0edpHjzWNMnHI4W9x/QpYru/cU0w3k2ya', 'admin');
 
 --
 -- Indexes for dumped tables

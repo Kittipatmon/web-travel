@@ -2,6 +2,13 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// ตรวจสอบสิทธิ์ผู้ดูแลระบบ (Admin Role Verification)
+if (!isset($_SESSION["role_user"]) || $_SESSION["role_user"] !== "admin") {
+    header("Location: frm_login.php");
+    exit;
+}
+
 include "connect.php";
 
 if (isset($_GET['t_id'])) {

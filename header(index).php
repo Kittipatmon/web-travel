@@ -164,17 +164,33 @@ $current_page = basename($_SERVER['PHP_SELF']);
     }
 
     .dropdown-content {
-        display: none;
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+        pointer-events: none;
         position: absolute;
         background-color: #ffffff;
-        min-width: 160px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        min-width: 165px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
         border-radius: 12px;
         right: 0;
         top: 100%;
         margin-top: 8px;
+        padding: 4px;
         z-index: 1050;
-        overflow: hidden;
+    }
+
+    /* สะพานเชื่อมการ Hover (Invisible hover bridge) ป้องกันไม่ให้เมนูปิดเวลาเลื่อนเมาส์ลงมา */
+    .dropdown-content::before {
+        content: '';
+        position: absolute;
+        top: -14px;
+        left: 0;
+        right: 0;
+        height: 14px;
+        background: transparent;
     }
 
     .dropdown-content a {
@@ -187,6 +203,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
         font-size: 14px;
         font-weight: 500;
         font-family: 'Prompt', sans-serif;
+        border-radius: 8px;
+        transition: background-color 0.15s ease, color 0.15s ease;
     }
 
     .dropdown-content a:hover {
@@ -194,8 +212,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
         color: #ff991b !important;
     }
 
-    .avatar-dropdown:hover .dropdown-content {
-        display: block;
+    .avatar-dropdown:hover .dropdown-content,
+    .avatar-dropdown.show .dropdown-content {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
     }
 
     /* Hide mobile menu trigger on desktop */
@@ -447,6 +469,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
         .header-area .main-nav .nav .avatar-dropdown .dropdown-content {
             position: static !important;
             display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            transform: none !important;
+            pointer-events: auto !important;
             background-color: #fafbfc !important;
             box-shadow: none !important;
             border-radius: 0 !important;
@@ -454,6 +480,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
             padding: 0 !important;
             border-top: none !important;
             width: 100% !important;
+        }
+
+        .header-area .main-nav .nav .avatar-dropdown .dropdown-content::before {
+            display: none !important;
         }
 
         .header-area .main-nav .nav .avatar-dropdown .dropdown-content a {
@@ -598,6 +628,23 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 }
             });
         });
+        // Click-to-toggle for Profile dropdown on desktop
+        var avatarDropdown = document.querySelector('.avatar-dropdown');
+        var profileBtn = document.querySelector('.avatar-dropdown .profile-btn');
+        if (avatarDropdown && profileBtn) {
+            profileBtn.onclick = function(e) {
+                if (window.innerWidth > 991) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    avatarDropdown.classList.toggle('show');
+                }
+            };
+            document.addEventListener('click', function(e) {
+                if (!avatarDropdown.contains(e.target)) {
+                    avatarDropdown.classList.remove('show');
+                }
+            });
+        }
     }
 
     if (document.readyState === 'loading') {

@@ -1,50 +1,94 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once 'connect.php'; // เชื่อมต่อฐานข้อมูล
 
-$email = strtolower(trim($_POST['email_user'] ?? ''));
-$password = trim($_POST['password_user'] ?? '');
+// ระบบป้องกัน Brute-Force Rate Limiting
+$max_attempts = 5;
+$lockout_time = 15 * 60; // 15 นาที
+$now = time();
 
-$login_success = false;
-$user_name = '';
-$error_message = '';
-
-if (empty($email) || empty($password)) {
-    $error_message = 'กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน';
+if (isset($_SESSION['login_locked_until']) && $_SESSION['login_locked_until'] > $now) {
+    $remaining = ceil(($_SESSION['login_locked_until'] - $now) / 60);
+    $error_message = "คุณเข้าสู่ระบบผิดพลาดเกินกำหนด กรุณารออีก {$remaining} นาที แล้วลองใหม่อีกครั้ง";
+    $login_success = false;
+    $user_name = '';
 } else {
-    $stmt = $conn->prepare("SELECT * FROM users WHERE LOWER(email_user) = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    // พ้นเวลาล็อคแล้วให้รีเซ็ตสถานะ
+    if (isset($_SESSION['login_locked_until']) && $_SESSION['login_locked_until'] <= $now) {
+        unset($_SESSION['login_locked_until']);
+        $_SESSION['login_attempts'] = 0;
+    }
 
-    if ($result && $result->num_rows > 0) {
-        $user = $result->fetch_assoc();
+    $email = strtolower(trim($_POST['email_user'] ?? ''));
+    $password = trim($_POST['password_user'] ?? '');
 
-        // ตรวจสอบรหัสผ่าน: รองรับรหัสผ่านเดิม 'test' และรหัสทั่วไป '1234' หรือ 'admin' เพื่อความสะดวกในการทดสอบ
-        $is_password_valid = (
-            $password === $user['password_user'] ||
-            ($user['email_user'] === 'test@gmail.com' && in_array($password, ['test', '1234', 'admin'])) ||
-            password_verify($password, $user['password_user']) ||
-            md5($password) === $user['password_user']
-        );
+    $login_success = false;
+    $user_name = '';
+    $error_message = '';
 
-        if ($is_password_valid) {
-            if ($user['role_user'] === 'admin') {
-                $_SESSION['id_user'] = $user['id_user'];
-                $_SESSION['email_user'] = $user['email_user'];
-                $_SESSION['role_user'] = $user['role_user'];
-                unset($_SESSION['login_error']);
-                $login_success = true;
-                $user_name = $user['name_user'];
-                session_write_close();
+    if (empty($email) || empty($password)) {
+        $error_message = 'กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน';
+    } else {
+        $stmt = $conn->prepare("SELECT * FROM users WHERE LOWER(email_user) = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result && $result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+
+            $is_password_valid = false;
+
+            // 1. ตรวจสอบด้วย bcrypt hash (มาตรฐาน OWASP)
+            if (password_verify($password, $user['password_user'])) {
+                $is_password_valid = true;
+            } 
+            // 2. รองรับรหัสผ่านเดิมเพื่อความต่อเนื่อง (Backward Compatibility) และแปลงเป็น hash ทันที
+            elseif ($password === $user['password_user'] || md5($password) === $user['password_user']) {
+                $is_password_valid = true;
+                $newHash = password_hash($password, PASSWORD_DEFAULT);
+                $upStmt = $conn->prepare("UPDATE users SET password_user = ? WHERE id_user = ?");
+                $upStmt->bind_param("si", $newHash, $user['id_user']);
+                $upStmt->execute();
+                $upStmt->close();
+            }
+
+            if ($is_password_valid) {
+                if ($user['role_user'] === 'admin') {
+                    // ป้องกัน Session Fixation
+                    session_regenerate_id(true);
+
+                    // รีเซ็ตประวัติการพยายามล็อกอิน
+                    unset($_SESSION['login_attempts']);
+                    unset($_SESSION['login_locked_until']);
+                    unset($_SESSION['login_error']);
+
+                    $_SESSION['id_user'] = $user['id_user'];
+                    $_SESSION['email_user'] = $user['email_user'];
+                    $_SESSION['role_user'] = $user['role_user'];
+                    $login_success = true;
+                    $user_name = $user['name_user'];
+                    session_write_close();
+                } else {
+                    $error_message = 'คุณไม่มีสิทธิ์เข้าถึงระบบผู้ดูแล';
+                }
             } else {
-                $error_message = 'คุณไม่มีสิทธิ์เข้าถึงระบบผู้ดูแล';
+                $error_message = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
             }
         } else {
-            $error_message = 'รหัสผ่านไม่ถูกต้อง (รหัสผ่านคือ test หรือ 1234)';
+            $error_message = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
         }
-    } else {
-        $error_message = 'ไม่พบผู้ใช้งานที่มีอีเมลนี้ในระบบ';
+
+        // หากล็อกอินล้มเหลว บันทึกจำนวนครั้ง
+        if (!$login_success) {
+            $_SESSION['login_attempts'] = ($_SESSION['login_attempts'] ?? 0) + 1;
+            if ($_SESSION['login_attempts'] >= $max_attempts) {
+                $_SESSION['login_locked_until'] = $now + $lockout_time;
+                $error_message = "คุณเข้าสู่ระบบผิดเกิน 5 ครั้ง ระบบถูกล็อคชั่วคราวเป็นเวลา 15 นาที";
+            }
+        }
     }
 }
 

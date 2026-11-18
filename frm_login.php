@@ -10,7 +10,7 @@ session_unset(); // Clear session variables after using them
 
 function showError($error)
 {
-    return !empty($error) ? "<div class='error-message' style='color: #dc2626; font-size: 13px; margin-bottom: 15px; padding: 10px 14px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca; text-align: center;'>⚠️ " . htmlspecialchars($error) . "</div>" : '';
+    return !empty($error) ? "<div class='error-message' style='color: #dc2626; font-size: 13.5px; margin-bottom: 20px; padding: 11px 16px; background: #fef2f2; border-radius: 10px; border: 1px solid #fecaca; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500;'><span>⚠️</span><span>" . htmlspecialchars($error) . "</span></div>" : '';
 }
 function isActiveForm($formName, $activeForm)
 {
@@ -597,8 +597,8 @@ function isActiveForm($formName, $activeForm)
             <div class="login-form <?= isActiveForm('login', $activeForm) ?>" id="login-section">
                 <div class="welcome-text">ยินดีต้อนรับกลับสู่การผจญภัยของคุณ</div>
                 <form action="login.php" method="POST">
+                    <?= showError($errors['login']); ?>
                     <div class="input-group">
-                        <?= showError($errors['login'], 'login'); ?>
                         <input type="email" id="login-email" name="email_user" placeholder=" ">
                         <label for="login-email">อีเมลของคุณ</label>
                         <div class="icon">

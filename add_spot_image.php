@@ -4,6 +4,12 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include "connect.php";
 
+// ป้องกันการเข้าถึงโดยไม่ได้รับอนุญาต (Admin Role Verification)
+if (!isset($_SESSION["role_user"]) || $_SESSION["role_user"] !== "admin") {
+    header("Location: frm_login.php");
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $u_id = intval($_POST['u_id'] ?? 0);
 
@@ -24,12 +30,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $success = 0;
     $errors = [];
+    $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    $allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    $maxFileSize = 15 * 1024 * 1024; // 15 MB
 
     if (isset($_FILES['images']['tmp_name']) && is_array($_FILES['images']['tmp_name'])) {
         foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
-            if (!empty($tmp_name)) {
+            if (!empty($tmp_name) && $_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
                 $originalName = basename($_FILES['images']['name'][$key]);
-                $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+                // 1. ตรวจสอบนามสกุลไฟล์
+                if (!in_array($extension, $allowedExts)) {
+                    $errors[] = $originalName . ' (นามสกุลไฟล์ไม่อนุญาต)';
+                    continue;
+                }
+
+                // 2. ตรวจสอบ MIME type จริง
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mime = finfo_file($finfo, $tmp_name);
+                finfo_close($finfo);
+                if (!in_array($mime, $allowedMimes)) {
+                    $errors[] = $originalName . ' (เนื้อหาไฟล์ไม่ใช่รูปภาพ)';
+                    continue;
+                }
+
+                // 3. ตรวจสอบขนาดไฟล์
+                if ($_FILES['images']['size'][$key] > $maxFileSize) {
+                    $errors[] = $originalName . ' (ขนาดเกิน 15 MB)';
+                    continue;
+                }
+
                 $newFileName = uniqid('img_', true) . '.' . $extension;
                 $targetFilePath = $targetDir . $newFileName;
 

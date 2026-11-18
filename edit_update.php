@@ -4,6 +4,12 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include "connect.php";
 
+// ป้องกันการเข้าถึงโดยไม่ได้รับอนุญาต (Admin Role Verification)
+if (!isset($_SESSION["role_user"]) || $_SESSION["role_user"] !== "admin") {
+    header("Location: frm_login.php");
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $u_id = intval($_POST['u_id'] ?? 0);
     $imageName = trim($_POST['image_name'] ?? '');
@@ -34,11 +40,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $checkStmt->close();
 
     // ตรวจสอบว่ามีการอัปโหลดไฟล์ใหม่หรือไม่
-    if (!empty($_FILES['image']['name'])) {
+    if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $file = $_FILES['image'];
         $fileName = basename($file['name']);
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        $maxFileSize = 15 * 1024 * 1024; // 15 MB
+
+        if (!in_array($ext, $allowedExts)) {
+            $_SESSION['flash_alert'] = [
+                'icon' => 'error',
+                'title' => 'ไฟล์ไม่ถูกต้อง',
+                'text' => 'อนุญาตเฉพาะไฟล์รูปภาพประเภท JPG, PNG, WEBP หรือ GIF เท่านั้น'
+            ];
+            header("Location: dashboard_pic.php");
+            exit;
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+        if (!in_array($mime, $allowedMimes)) {
+            $_SESSION['flash_alert'] = [
+                'icon' => 'error',
+                'title' => 'ไฟล์ไม่ปลอดภัย',
+                'text' => 'เนื้อหาไฟล์ไม่ใช่รูปภาพที่ถูกต้อง กรุณาอัปโหลดรูปภาพจริง'
+            ];
+            header("Location: dashboard_pic.php");
+            exit;
+        }
+
+        if ($file['size'] > $maxFileSize) {
+            $_SESSION['flash_alert'] = [
+                'icon' => 'warning',
+                'title' => 'ไฟล์มีขนาดใหญ่เกินไป',
+                'text' => 'ขนาดไฟล์ต้องไม่เกิน 15 MB'
+            ];
+            header("Location: dashboard_pic.php");
+            exit;
+        }
+
         $uploadDir = "uploads/";
-        $newImagePath = $uploadDir . time() . "_" . $fileName;
+        $newImagePath = $uploadDir . time() . "_" . uniqid() . "." . $ext;
 
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -46,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (move_uploaded_file($file['tmp_name'], $newImagePath)) {
             // ลบไฟล์เก่า ถ้ามีและไม่ใช่ค่าเริ่มต้น
-            if (!empty($oldImagePath) && file_exists($oldImagePath)) {
+            if (!empty($oldImagePath) && file_exists($oldImagePath) && strpos($oldImagePath, 'uploads/') === 0) {
                 @unlink($oldImagePath);
             }
         } else {
