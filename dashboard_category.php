@@ -74,6 +74,7 @@ $totalSpotsCount = $totalSpotsRes ? (int)$totalSpotsRes->fetch_assoc()['total'] 
 
         .table td, .table th {
             vertical-align: middle;
+          
         }
 
         .icon-picker-btn {

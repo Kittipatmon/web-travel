@@ -666,7 +666,7 @@ if (isset($_GET['u_id'])) {
     <script src="assets/js/owl-carousel.js"></script>
     <script src="assets/js/tabs.js"></script>
     <script src="assets/js/popup.js"></script>
-    <script src="assets/js/custom.js"></script>
+    <script src="assets/js/custom.js?v=<?= filemtime('assets/js/custom.js') ?>"></script>
 
     <!-- Script ควบคุมโปสเตอร์สไลเดอร์เดิม -->
     <script>
